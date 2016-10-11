@@ -59,6 +59,8 @@ func virtualMemory(nss []core.Namespace) ([]plugin.MetricType, error) {
 			data = mem.Cached
 		case "wired":
 			data = mem.Wired
+		case "shared":
+			data = mem.Cached
 		default:
 			return nil, fmt.Errorf("Requested memory statistic %s is not found", ns.String())
 		}
@@ -98,6 +100,11 @@ func getVirtualMemoryMetricTypes() []plugin.MetricType {
 			the platform and designed for informational purposes only.`,
 		},
 		plugin.MetricType{
+			Namespace_:   core.NewNamespace("intel", "psutil", "vm", "shared"),
+			Unit_:        "B",
+			Description_: `Memory that might be simultaneously accessed by multiple process.`,
+		},
+		plugin.MetricType{
 			Namespace_: core.NewNamespace("intel", "psutil", "vm", "used_percent"),
 			Unit_:      "B",
 			Description_: `the percentage usage calculated as (total - available) 
@@ -127,15 +134,15 @@ func getVirtualMemoryMetricTypes() []plugin.MetricType {
 			Unit_:        "B",
 		},
 		plugin.MetricType{
-			Namespace_:   core.NewNamespace("intel", "psutil", "vm", "cached"),
-			Description_: `(Linux, BSD): cache for various things.`,
-			Unit_:        "B",
-		},
-		plugin.MetricType{
 			Namespace_: core.NewNamespace("intel", "psutil", "vm", "wired"),
 			Description_: `(BSD, OSX): memory that is marked to always stay in RAM. 
 			It is never moved to disk.`,
 			Unit_: "B",
+		},
+		plugin.MetricType{
+			Namespace_:   core.NewNamespace("intel", "psutil", "vm", "cached"),
+			Description_: `(Linux, BSD): cache for various things.`,
+			Unit_:        "B",
 		},
 	}
 }
